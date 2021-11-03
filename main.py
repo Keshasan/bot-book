@@ -15,12 +15,17 @@ def input_error(func):
         for arg in args:
             if arg == '':
                 print('Name or phone cannot be empty.')
-                return        
+                return
+            elif arg is None:
+                print('Incorrect command usage.')
+                return       
         try:
             val = func(*args, **kwargs)
             return val
         except KeyError:
             print('There is no such name in your phone book')
+        except IndexError:
+            print('Give me name and phone please')
     return input_error_wrapper
 
 def hello_command():
@@ -39,13 +44,13 @@ def exit_command():
 def show_all():
     return DEFAULT_PHONE_BOOK
 
-@input_error
+
 def add_command(name, phone_number):
     '''Adds new name with phone number to phone book'''
     DEFAULT_PHONE_BOOK[name] = phone_number
     return True
 
-@input_error
+
 def change_command(name, phone_number):
     '''Changes new name with phone number to phone book'''
     if name not in DEFAULT_PHONE_BOOK.keys():
@@ -53,7 +58,7 @@ def change_command(name, phone_number):
     DEFAULT_PHONE_BOOK[name] = phone_number
     return True
 
-@input_error
+
 def get_phone(name):
     '''Returns phone number'''
     return DEFAULT_PHONE_BOOK[name]
@@ -67,33 +72,43 @@ DEFAULT_COMMANDS = {
                     'good bye': exit_command,
                     }
 
+@input_error
 def main():
     print('Hello, this is bot assistant. Type "hello" to see list of commands')
     while True:
-        command = input('>> ').lower().strip()
-        
+        commands = input('>> ').lower().strip().split(' ')
+        command = commands[0]
         if command in DEFAULT_COMMANDS:
             DEFAULT_COMMANDS[command]()
         
         elif command == 'add':
-            name = input('Type contact name: ')
-            phone_number = input('Type contact phone number: ')
-            if add_command(name, phone_number):
-                print(f'[+] {name} is saved to your phone book')
+            if len(commands) != 3:
+                print('Incorrect input')
+            else:
+                name = commands[1]
+                phone_number = commands[2]
+                if add_command(name, phone_number):
+                    print(f'[+] {name} is saved to your phone book')
         
         elif command == 'change':
-            name = input('Type contact name: ')
-            new_phone_number = input('Type new contact phone number: ')
-            if change_command(name, new_phone_number):
-                print(f'[+] {name} is updated in your phone book with a phone number {new_phone_number}.')
+            if len(commands) != 3:
+                print('Incorrect input')
             else:
-                print(f'[-] {name} have not been found in your phone book.')
+                name = commands[1]
+                new_phone_number = commands[2]
+                if change_command(name, new_phone_number):
+                    print(f'[+] {name} is updated in your phone book with a phone number {new_phone_number}.')
+                else:
+                    print(f'[-] {name} have not been found in your phone book.')
 
         elif command == 'phone':
-            name = input('Type contact name: ')
-            phone_number = get_phone(name)
-            if phone_number:
-                print(f'"{name}" phone number is - {phone_number}')
+            if len(commands) != 2:
+                print('Incorrect input')
+            else:
+                name = commands[1]
+                phone_number = get_phone(name)
+                if phone_number:
+                    print(f'"{name}" phone number is - {phone_number}')
         
         elif command == 'show all':
             phone_book = show_all()
