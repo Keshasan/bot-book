@@ -44,13 +44,13 @@ def exit_command():
 def show_all():
     return DEFAULT_PHONE_BOOK
 
-
+@input_error
 def add_command(name, phone_number):
     '''Adds new name with phone number to phone book'''
     DEFAULT_PHONE_BOOK[name] = phone_number
     return True
 
-
+@input_error
 def change_command(name, phone_number):
     '''Changes new name with phone number to phone book'''
     if name not in DEFAULT_PHONE_BOOK.keys():
@@ -58,7 +58,7 @@ def change_command(name, phone_number):
     DEFAULT_PHONE_BOOK[name] = phone_number
     return True
 
-
+@input_error
 def get_phone(name):
     '''Returns phone number'''
     return DEFAULT_PHONE_BOOK[name]
@@ -72,7 +72,6 @@ DEFAULT_COMMANDS = {
                     'good bye': exit_command,
                     }
 
-@input_error
 def main():
     print('Hello, this is bot assistant. Type "hello" to see list of commands')
     while True:
