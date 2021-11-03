@@ -47,7 +47,7 @@ def show_all():
 @input_error
 def add_command(name, phone_number):
     '''Adds new name with phone number to phone book'''
-    DEFAULT_PHONE_BOOK[name] = phone_number
+    DEFAULT_PHONE_BOOK[name] = phone_number@input_error
     return True
 
 @input_error
@@ -63,7 +63,6 @@ def get_phone(name):
     '''Returns phone number'''
     return DEFAULT_PHONE_BOOK[name]
     
-
 DEFAULT_COMMANDS = {
                     'hello': hello_command,
                     'help':hello_command,
@@ -82,7 +81,7 @@ def main():
         
         elif command == 'add':
             if len(commands) != 3:
-                print('Incorrect input')
+                print('Incorrect command usage.')
             else:
                 name = commands[1]
                 phone_number = commands[2]
@@ -91,7 +90,7 @@ def main():
         
         elif command == 'change':
             if len(commands) != 3:
-                print('Incorrect input')
+                print('Incorrect command usage.')
             else:
                 name = commands[1]
                 new_phone_number = commands[2]
@@ -102,14 +101,14 @@ def main():
 
         elif command == 'phone':
             if len(commands) != 2:
-                print('Incorrect input')
+                print('Incorrect command usage.')
             else:
                 name = commands[1]
                 phone_number = get_phone(name)
                 if phone_number:
                     print(f'"{name}" phone number is - {phone_number}')
         
-        elif command == 'show all':
+        elif command == 'show':
             phone_book = show_all()
             for name, phone_number in phone_book.items():
                 print(f'{name} : {phone_number}')
