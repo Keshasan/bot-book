@@ -7,7 +7,6 @@ class AdressBook(UserDict):
     @input_error
     def add_record(self, record):
         self.data[record.name.value] = record
-    @input_error
     
     def show_all_records(self):
         for name, phones in self.data.items():
@@ -108,7 +107,7 @@ def main():
             user_book.show_all_records()
         else:
             print("Incorrect command. I don't understand you =(")
-            
+
     print('Good bye!')
     sys.exit()
 
