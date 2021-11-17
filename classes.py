@@ -7,34 +7,35 @@ class AdressBook(UserDict):
     @input_error
     def add_record(self, record):
         self.data[record.name.value] = record
-    
+
     def show_all_records(self):
         for name, phones in self.data.items():
             print(f'{name}: {self.data[name].get_phones()}')
-    
+
 
 class Record:
     def __init__(self, name, phone):
         self.name = Name(name)
-        self.phones=[Phone(phone)]
-    
+        self.phones = [Phone(phone)]
+
     def add_phone(self, phone):
         self.phones.append(Phone(phone))
-        
+
     @input_error
     def delete_phone(self, candidate_phone):
         candidate_phone = Phone(candidate_phone)
         for phone in self.phones:
             if phone.value == candidate_phone.value:
-                self.phones.remove(phone)    
+                self.phones.remove(phone)
+
     @input_error
     def change_phone(self, old_phone, new_phone):
-        
+
         if old_phone in self.get_phones():
             self.delete_phone(old_phone)
             self.add_phone(new_phone)
         else:
-            self.add_phone(new_phone) 
+            self.add_phone(new_phone)
 
     def get_phones(self):
         return [phone.value for phone in self.phones]
@@ -54,13 +55,12 @@ class Phone(Field):
     def __init__(self, value):
         super().__init__(value)
 
-    
 
 def main():
     print('Hello, this is bot assistant. Type "hello" to see list of commands')
-    command = ''
+    command = None
     user_book = AdressBook()
-    
+
     while command not in ('exit', 'quit', 'good'):
         commands = input('>> ').strip().split(' ')
         command = commands[0].lower()
@@ -68,7 +68,8 @@ def main():
             ''' Prints info about commands'''
             print('How can i help you?')
             print('Type "add Username +380*********" to add contact to your phone book.')
-            print('Type "change username +380********* +380*********" to change phone number in your phone book.')
+            print(
+                'Type "change username +380********* +380*********" to change phone number in your phone book.')
             print('Type "show all" to get all your contacts.')
             print('Type "phone Username" to find person phone number by name.')
             print('Type "exit" or "qiut" or "good bye" to finish my work.')
@@ -92,7 +93,8 @@ def main():
                 name = commands[1]
                 old_phone_number = commands[2]
                 new_phone_number = commands[3]
-                user_book[name].change_phone(old_phone_number, new_phone_number)
+                user_book[name].change_phone(
+                    old_phone_number, new_phone_number)
 
         elif command == 'phone':
             if len(commands) != 2:
@@ -105,11 +107,14 @@ def main():
 
         elif command == 'show':
             user_book.show_all_records()
+        elif command in ('quit', 'exit'):
+            print('Good bye!')
+            break
         else:
             print("Incorrect command. I don't understand you =(")
 
-    print('Good bye!')
     sys.exit()
+
 
 if __name__ == '__main__':
     main()
