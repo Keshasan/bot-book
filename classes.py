@@ -106,10 +106,7 @@ class Field:
 
     @property
     def value(self):
-        if self.__value:
-            return self.__value
-        else:
-            return '*'
+        return self.__value
 
     @value.setter
     def value(self, value):
@@ -125,13 +122,36 @@ class Birthday(Field):
     def __init__(self, value):
         super().__init__(value)
 
+    @property
+    def value(self):
+        if self.__value:
+            return self.__value
+
+    @value.setter
+    def value(self, value):
+        self.__value = value
+
 
 class Phone(Field):
     def __init__(self, value: str):
+        super().__init__(value)
+
+    @property
+    def value(self):
+        if self.__value:
+            return self.__value
+
+    @value.setter
+    def value(self, value):
+        """
+            Setter validates input number as phone number
+                if number is not valid set it to '*' symbol.
+        """
+        value = value.replace('+', '').replace('-', '').replace(' ', '').strip()
         if value.isdigit():
-            super().__init__(value)
+            self.__value = value
         else:
-            super().__init__(None)
+            self.__value = '*'
 
 
 def main():
