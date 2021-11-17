@@ -23,6 +23,8 @@ def input_error(func):
         try:
             val = func(*args, **kwargs)
             return val
+        except ValueError:
+            print('Invalid data was given.')
         except KeyError:
             print('There is no such name in your phone book')
         except IndexError:

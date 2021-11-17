@@ -1,6 +1,7 @@
 import sys
 from collections import UserDict
 from main import input_error
+from datetime import date
 
 
 class AdressBook(UserDict):
@@ -12,14 +13,23 @@ class AdressBook(UserDict):
         for name, phones in self.data.items():
             print(f'{name}: {self.data[name].get_phones()}')
 
+    # def show_birthday(self, name):
+    #     print(self.data[name].get_birthday())
+
 
 class Record:
     def __init__(self, name, phone):
         self.name = Name(name)
         self.phones = [Phone(phone)]
+        self.birthday = None
 
     def add_phone(self, phone):
         self.phones.append(Phone(phone))
+
+    @input_error
+    def add_birthday(self, birthday_date):
+        birthday_date = date.fromisoformat(birthday_date)
+        self.birthday = Birthday(birthday_date)
 
     @input_error
     def delete_phone(self, candidate_phone):
@@ -37,8 +47,34 @@ class Record:
         else:
             self.add_phone(new_phone)
 
+    @input_error
     def get_phones(self):
         return [phone.value for phone in self.phones]
+
+    @input_error
+    def get_birthday(self):
+        if self.birthday is not None:
+            return self.birthday.value
+        else:
+            print('No birthday')
+
+    @input_error
+    def days_to_birthday(self):
+        if self.birthday is None:
+            print(f'No b-day added for {self.name.value}')
+            return None
+        date_now = date.today()
+        birthday_date = self.birthday.value
+        birthday_date = birthday_date.replace(year=date_now.year)
+        # Check if user's birthday passed this year => year + 1
+        if birthday_date <= date_now:
+            birthday_date = birthday_date.replace(year=date_now.year + 1)
+
+        days_delta = (birthday_date - date_now).days
+        print(f"{days_delta} days before {self.name.value}'s Birthday.")
+        print(f"Birthday date is: {self.birthday.value.strftime('%d %b %Y')}")
+        return days_delta
+
 
 
 class Field:
@@ -62,6 +98,11 @@ class Name(Field):
         super().__init__(value)
 
 
+class Birthday(Field):
+    def __init__(self, value):
+        super().__init__(value)
+
+
 class Phone(Field):
     def __init__(self, value: str):
         if value.isdigit():
@@ -71,7 +112,7 @@ class Phone(Field):
 
 
 def main():
-    print('Hello, this is bot assistant. Type "hello" to see list of commands')
+    print('Hello, this is bot assistant. Type "hello" or "help" to see list of commands \n')
     command = None
     user_book = AdressBook()
 
@@ -86,7 +127,9 @@ def main():
                 'Type "change username +380********* +380*********" to change phone number in your phone book.')
             print('Type "show all" to get all your contacts.')
             print('Type "phone Username" to find person phone number by name.')
-            print('Type "exit" or "qiut" or "good bye" to finish my work.')
+            print('Type "bday Username" to find username birthday and count days before birthday.')
+            print('Type "bday Username YYYY-MM-DD" to set username birthday in ISO format.')
+            print('Type "exit" or "quit" or "good bye" to finish my work.')
 
         elif command == 'add':
             if len(commands) != 3:
@@ -119,8 +162,22 @@ def main():
                 if phone_numbers:
                     print(f'"{name}" phone numbers is - {phone_numbers}')
 
+        elif command == 'bday':
+            if len(commands) == 2:
+                name = commands[1]
+                user_book.data[name].days_to_birthday()
+
+            elif len(commands) == 3:
+                name = commands[1]
+                date_ = commands[2]
+                user_book[name].add_birthday(date_)
+
+            else:
+                print('Incorrect command usage!')
+
         elif command == 'show':
             user_book.show_all_records()
+
         elif command in ('quit', 'exit'):
             print('Good bye!')
             break
