@@ -45,6 +45,17 @@ class Field:
     def __init__(self, value):
         self.value = value
 
+    @property
+    def value(self):
+        if self.__value:
+            return self.__value
+        else:
+            return '*'
+
+    @value.setter
+    def value(self, value):
+        self.__value = value
+
 
 class Name(Field):
     def __init__(self, value):
@@ -52,8 +63,11 @@ class Name(Field):
 
 
 class Phone(Field):
-    def __init__(self, value):
-        super().__init__(value)
+    def __init__(self, value: str):
+        if value.isdigit():
+            super().__init__(value)
+        else:
+            super().__init__(None)
 
 
 def main():
