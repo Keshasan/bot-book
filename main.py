@@ -84,7 +84,7 @@ DEFAULT_COMMANDS = {
 
 def main():
     print('Hello, this is bot assistant. Type "hello" to see list of commands')
-    command = ''
+    command = None
 
     while command not in ('exit', 'quit', 'good'):
         commands = input('>> ').lower().strip().split(' ')
