@@ -89,7 +89,7 @@ class Record:
         phone_to_delete = self._find_phone(phone)
         self.phones.remove(phone_to_delete) if phone_to_delete else None
 
-    def edit_phone(self, old_phone, new_phone) -> None:
+    def change_phone(self, old_phone, new_phone) -> None:
         new_phone = Phone(new_phone)
         phone_to_remove = self._find_phone(old_phone)
         if phone_to_remove:
@@ -130,8 +130,11 @@ class Record:
         print(f"Birthday date is: {self.birthday.value.strftime('%d %b %Y')}")
         return days_delta
 
+    def __next__(self):
+        return self
 
-class AddressBook(UserDict):
+
+class AdressBook(UserDict):
     """All contacts data"""
 
     def add_record(self, record: list) -> None:
@@ -147,42 +150,22 @@ class AddressBook(UserDict):
     def __str__(self):
         return str(self.data)
 
-    def show_records(self):
-        for phones in self.data.values():
-            print(phones)
+    def show_all_records(self):
+        for record in self:
+            print(record)
 
-    def iterator(self, number_records: int):
-        pass
+    def __iter__(self):
+        return iter(self.data.values())
 
+    def __len__(self) -> int:
+        return len(self.data.values())
 
-def test():
-    book = AddressBook()
-    book.add_record(["Yehor", "063 666 99 66", "048 722 22 22"])
-    book.add_record(["Pavel", "063 666 66 66", "048 222 22 22"])
+    def page_iterator(self, number_records: int = 3):
+        counter = 0
 
-    record = book.find_record("Pavel")
-    book.delete_record("Yehor")
-    book.add_record(["Yehor", "063 666 99 66", "048 333 333 3"])
-    book.show_records()
-    # print(record)
-    # print("\n")
-    # print("#" * 10)
-    # record.delete_phone("048 222 22 22")
-    # record.edit_phone("095 666 66 66", "067 666 66 66")
-    # print(record)
-    print("#" * 10)
-
-    # YYYY-MM-DD
-    # record.add_birthday('1993-11-15')
-    # print(record.days_to_birthday())
-    # print("#" * 10)
-    book.add_record(["Bob", "063 666 99 66", "048 722 22 22"])
-    book.add_record(["Nick", "063 666 66 66", "048 222 22 22"])
-
-    book.add_record(["George", "063 666 99 66"])
-    book.add_record(["John", "063 666 66 66", "048 222 22 22"])
-
-    book.iterator(3)
-
-
-test()
+        for record in self.data.values():
+            print(record)
+            counter += 1
+            # check pagination
+            if counter % number_records == 0:
+                yield record
