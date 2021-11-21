@@ -66,9 +66,9 @@ class Record:
     """Records(contacts) in users contact book.
     Only one name , but it can be more than one phone"""
 
-    def __init__(self, name: str, phone: List[str] = None) -> None:
-        if phone:
-            self.phones = [Phone(p) for p in phone]
+    def __init__(self, name: str, phones: List[str] = None) -> None:
+        if phones:
+            self.phones = [Phone(p) for p in phones]
         else:
             self.phones = []
 
@@ -93,7 +93,7 @@ class Record:
         new_phone = Phone(new_phone)
         phone_to_remove = self._find_phone(old_phone)
         if phone_to_remove:
-            self.phones.remove()
+            self.phones.remove(phone_to_remove)
             self.phones.append(new_phone)
 
     def __str__(self):

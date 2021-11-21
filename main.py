@@ -27,15 +27,15 @@ def main():
             print('Type "exit" or "quit" or "good bye" to finish my work.')
 
         elif command == 'add':
-            if len(commands) != 3:
+            if len(commands) < 3:
                 print('Incorrect command usage.')
             else:
                 name, phone_numbers = commands[1], commands[2:]
                 if user_book.data.get(name):
                     user_book.data[name].add_phone(phone_numbers)
                 else:
-                    new_record = Record(name, phone_numbers)
-                    user_book.add_record(new_record)
+
+                    user_book.add_record([name]+phone_numbers)
 
         elif command == 'change':
             if len(commands) != 4:
