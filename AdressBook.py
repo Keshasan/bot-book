@@ -60,19 +60,20 @@ class Birthday(Field):
         except ValueError:
             print('Incorrect format date was given.')
             self.__value = None
+        except TypeError:
+            self.__value = None
 
 
 class Record:
     """Records(contacts) in users contact book.
     Only one name , but it can be more than one phone"""
 
-    def __init__(self, name: str, phones: List[str] = None) -> None:
+    def __init__(self, name: str, phones: List[str] = None, birthday: Optional[str] = None) -> None:
         if phones:
             self.phones = [Phone(p) for p in phones]
         else:
             self.phones = []
-
-        self.birthday = None
+        self.birthday = Birthday(birthday)
         self.name = Name(name)
 
     def add_phone(self, phone_number: str) -> None:
@@ -80,23 +81,26 @@ class Record:
         if phone not in self.phones:
             self.phones.append(phone)
 
-    def _find_phone(self, phone: str) -> Optional[Phone]:
-        for p in self.phones:
-            if p.value == phone:
-                return p
-
     def delete_phone(self, phone: str) -> None:
-        phone_to_delete = self._find_phone(phone)
+        phone_to_delete = self.__find_phone_single_value(phone)
         self.phones.remove(phone_to_delete) if phone_to_delete else None
 
     def change_phone(self, old_phone, new_phone) -> None:
         new_phone = Phone(new_phone)
-        phone_to_remove = self._find_phone(old_phone)
+        phone_to_remove = self.__find_phone_single_value(old_phone)
         if phone_to_remove:
             self.phones.remove(phone_to_remove)
             self.phones.append(new_phone)
 
+    def __find_phone_single_value(self, phone: str) -> Optional[Phone]:
+        for p in self.phones:
+            if p.value == phone:
+                return p
+
     def __str__(self):
+        return f"Record of {self.name.value}, phones {[p.value for p in self.phones]}"
+
+    def __repr__(self):
         return f"Record of {self.name.value}, phones {[p.value for p in self.phones]}"
 
     def get_phones(self):
@@ -138,7 +142,7 @@ class AdressBook(UserDict):
     """All contacts data"""
 
     def add_record(self, record: list) -> None:
-        new_record = Record(record[0], record[1:])
+        new_record = Record(name=record[0], phones=record[1:])
         self.data[new_record.name.value] = new_record
 
     def find_record(self, value: str) -> Optional[Record]:
@@ -161,11 +165,9 @@ class AdressBook(UserDict):
         return len(self.data.values())
 
     def page_iterator(self, number_records: int = 3):
-        counter = 0
-
-        for record in self.data.values():
-            print(record)
-            counter += 1
-            # check pagination
-            if counter % number_records == 0:
-                yield record
+        """
+            Generator  n-sized
+        """
+        records = [record for record in self]
+        for i in range(0, len(records), number_records):
+            yield records[i:i + number_records]
