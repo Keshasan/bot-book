@@ -19,7 +19,7 @@ class Field:
 
 
 class Name(Field):
-    pass
+    """Name class field of class Record"""
 
 
 class Phone(Field):
@@ -38,6 +38,8 @@ class Phone(Field):
 
 
 class Birthday(Field):
+    """Birthday field of cls Record"""
+
     def __init__(self, value):
         try:
             value = date.fromisoformat(value)
