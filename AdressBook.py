@@ -26,16 +26,10 @@ class Name(Field):
 class Phone(Field):
     """Phone of the contact"""
 
-    @property
-    def value(self):
-        return self.__value
-
-    @value.setter
-    def value(self, value: str):
-        # Phone number validation
+    def __init__(self, value):
         value = value.replace('+', '').replace(' ', '')
         if value.isdigit():
-            self.__value = value
+            super().__init__(value)
 
     def __eq__(self, other: object) -> bool:
         return self.value == other.value
@@ -46,22 +40,14 @@ class Phone(Field):
 
 class Birthday(Field):
     def __init__(self, value):
-        self.value = value
-
-    @property
-    def value(self):
-        if self.__value:
-            return self.__value
-
-    @value.setter
-    def value(self, value):
         try:
-            self.__value = date.fromisoformat(value)
+            value = date.fromisoformat(value)
+            super().__init__(value)
         except ValueError:
             print('Incorrect format date was given.')
-            self.__value = None
+            self.value = None
         except TypeError:
-            self.__value = None
+            self.value = None
 
 
 class Record:

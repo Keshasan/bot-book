@@ -1,17 +1,18 @@
-import functools
 import sys
 
-from AdressBook import AdressBook, Record
+from AdressBook import AdressBook
 
 
 def main():
     print('Hello, this is bot assistant. Type "hello" or "help" to see list of commands \n')
     command = None
     user_book = AdressBook()
-
+    # page iterator for command next - to show next records
+    page_iterator = None
     while command not in ('exit', 'quit', 'good'):
         commands = input('>> ').strip().split(' ')
         command = commands[0].lower()
+
         if command in ('hello', 'help'):
             ''' Prints info about commands'''
             print('How can i help you?')
@@ -20,10 +21,10 @@ def main():
                 'Type "change username +380********* +380*********" to change phone number in your phone book.')
             print('Type "show all" to get all your contacts.')
             print('Type "phone Username" to find person phone number by name.')
-            print(
-                'Type "bday Username" to find username birthday and count days before birthday.')
-            print(
-                'Type "bday Username YYYY-MM-DD" to set username birthday in ISO format.')
+            print('Type "bday Username" to find username birthday and count days before birthday.')
+            print('Type "bday Username YYYY-MM-DD" to set username birthday in ISO format.')
+            print('Types "pages 3" to define pagination for 3 records in book')
+            print('Types "pages next" to show next 3 records')
             print('Type "exit" or "quit" or "good bye" to finish my work.')
 
         elif command == 'add':
@@ -76,6 +77,22 @@ def main():
 
         elif command == 'show':
             user_book.show_all_records()
+
+        elif command == 'pages':
+            if commands[1].isdigit():
+                number_records = int(commands[1])
+                page_iterator = user_book.page_iterator(number_records)
+            elif commands[1] == 'next':
+                if page_iterator is None:
+                    print('Type "pages 3" to start pagination')
+                    continue
+
+                try:
+                    for record in next(page_iterator):
+                        print(record)
+                except StopIteration:
+                    page_iterator = None
+                    print('*End Book*')
 
         elif command in ('quit', 'exit'):
             print('Good bye!')
