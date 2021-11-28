@@ -7,10 +7,12 @@ from AdressBook import AdressBook
 def main():
     print('Hello, this is bot assistant. Type "hello" or "help" to see list of commands \n')
     command = None
+
     if os.path.exists('data.bin'):
         user_book = load_book()
     else:
         user_book = AdressBook()
+
     # page iterator for command next - to show next records
     page_iterator = None
     while command not in ('exit', 'quit', 'good'):
@@ -99,6 +101,16 @@ def main():
                 except StopIteration:
                     page_iterator = None
                     print('*End Book*')
+
+        elif command == 'search':
+            text = ' '.join(commands[1:])
+            for record in user_book:
+                if text in record.name.value:
+                    print(record)
+
+                for phone_number in record.phones:
+                    if text in phone_number.value:
+                        print(record)
 
         elif command in ('quit', 'exit'):
             print('Good bye!')
