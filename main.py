@@ -22,17 +22,15 @@ def main():
         if command in ('hello', 'help'):
             ''' Prints info about commands'''
             print('How can i help you?')
-            print('Type "add Username +380*********" to add contact to your phone book.')
-            print(
-                'Type "change username +380********* +380*********" to change phone number in your phone book.')
+            print('Type "add Username 066*******" to add contact to your phone book.')
+            print('Type "change username 066******** +380*********" to change phone number in your phone book.')
             print('Type "show all" to get all your contacts.')
             print('Type "phone Username" to find person phone number by name.')
-            print(
-                'Type "bday Username" to find username birthday and count days before birthday.')
-            print(
-                'Type "bday Username YYYY-MM-DD" to set username birthday in ISO format.')
+            print('Type "bday Username" to find username birthday and count days before birthday.')
+            print('Type "bday Username YYYY-MM-DD" to set username birthday in ISO format.')
             print('Types "pages 3" to define pagination for 3 records in book')
             print('Types "pages next" to show next 3 records')
+            print('Types "search text" to show contacts which contains text.')
             print('Type "exit" or "quit" or "good bye" to finish my work.')
 
         elif command == 'add':
