@@ -1,3 +1,5 @@
+import os
+import pickle
 from collections import UserDict
 from typing import Optional, List
 from datetime import date
@@ -127,6 +129,15 @@ class Record:
 
 class AdressBook(UserDict):
     """All contacts data"""
+
+    def load_data(self) -> None:
+        if os.path.exists('data.bin'):
+            with open('data.bin', 'rb') as file:
+                self.data = pickle.load(file)
+
+    def save_data(self) -> None:
+        with open('data.bin', 'wb') as file:
+            pickle.dump(self.data, file)
 
     def add_record(self, record: list) -> None:
         new_record = Record(name=record[0], phones=record[1:])

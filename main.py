@@ -8,11 +8,9 @@ def main():
     print('Hello, this is bot assistant. Type "hello" or "help" to see list of commands \n')
     command = None
 
-    if os.path.exists('data.bin'):
-        user_book = load_book()
-    else:
-        user_book = AdressBook()
 
+    user_book = AdressBook()
+    user_book.load_data()
     # page iterator for command next - to show next records
     page_iterator = None
     while command not in ('exit', 'quit', 'good'):
@@ -116,19 +114,8 @@ def main():
         else:
             print("Incorrect command. I don't understand you =(")
 
-    save_book(user_book)
+    user_book.save_data()
     sys.exit()
-
-
-def load_book():
-    with open('data.bin', 'rb') as file:
-        return pickle.load(file)
-
-
-def save_book(book):
-    with open('data.bin', 'wb') as file:
-        pickle.dump(book, file)
-
 
 if __name__ == '__main__':
     main()
