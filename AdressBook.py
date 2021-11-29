@@ -131,11 +131,17 @@ class AdressBook(UserDict):
     """All contacts data"""
 
     def load_data(self) -> None:
+        """
+            Load data from file
+        """
         if os.path.exists('data.bin'):
             with open('data.bin', 'rb') as file:
                 self.data = pickle.load(file)
 
     def save_data(self) -> None:
+        """
+            Save data to file
+        """
         with open('data.bin', 'wb') as file:
             pickle.dump(self.data, file)
 
@@ -169,3 +175,17 @@ class AdressBook(UserDict):
         records = [record for record in self]
         for i in range(0, len(records), number_records):
             yield records[i:i + number_records]
+
+    def search_subtext(self, subtext: str) -> list:
+        """
+            Method returns list with records which contains subtext.
+        """
+        result_records = []
+        for record in self:
+                if subtext in record.name.value:
+                    result_records.append(record)
+
+                for phone_number in record.phones:
+                    if subtext in phone_number.value:
+                        result_records.append(record)
+        return result_records
